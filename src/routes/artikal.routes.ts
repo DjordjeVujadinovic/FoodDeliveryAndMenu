@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { konekcija } from '../src/mysqlTabela/tabela';
+import { konekcija } from '../mysqlTabela/tabela';
 
 const stavkaRuter = Router();
 

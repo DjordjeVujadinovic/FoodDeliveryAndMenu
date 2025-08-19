@@ -22,5 +22,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["routes/**/*.ts", "src/server.ts","src/**/*.ts"]
+  "include": ["src/routes/**/*.ts", "src/server.ts","src/**/*.ts"]
 }

@@ -1,0 +1,32 @@
+import type { Request, Response } from "express";
+import { konekcija } from "../mysqlTabela/tabela";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+export const registracija = async (req: Request, res: Response) => {
+  const { ime, email, lozinka, uloga } = req.body;
+  const hesovana = await bcrypt.hash(lozinka, 10);
+  try {
+    await konekcija.query(
+      "INSERT INTO korisnik (ime, email, lozinka, uloga) VALUES (?, ?, ?, ?)",
+      [ime, email, hesovana, uloga || "kupac"]
+    );
+    res.json({ poruka: "Registracija uspešna" });
+  } catch {
+    res.status(500).json({ error: "Greška pri registraciji" });
+  }
+}
+export const login = async (req: Request, res: Response) => {
+  const { email, lozinka } = req.body;
+  const [korisnici]: any = await konekcija.query("SELECT * FROM korisnik WHERE email = ?", [email]);
+  if (!korisnici.length) return res.status(404).json({ error: "Korisnik ne postoji" });
+  const korisnik = korisnici[0];
+  const validna = await bcrypt.compare(lozinka, korisnik.lozinka);
+  if (!validna) return res.status(401).json({ error: "Pogrešna lozinka" });
+  const token = jwt.sign(
+    { id: korisnik.id, email: korisnik.email, uloga: korisnik.uloga },
+    "tajni_kljuc",
+    { expiresIn: "2h" }
+  );
+  res.json({ token, korisnik: { id: korisnik.id, ime: korisnik.ime, uloga: korisnik.uloga } });
+};
