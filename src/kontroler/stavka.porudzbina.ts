@@ -12,7 +12,7 @@ export const dodajStavku = async (req: Request, res: Response) => {
   const { porudzbina_id, jelo_id, kolicina } = req.body;
   try {
     await konekcija.query(
-      "INSERT INTO stavka_porudzbine (porudzbina_id, jelo_id, kolicina) VALUES (?, ?, ?)",
+      "INSERT INTO stavka_porudzbine (porudzbina_id, jela_id, kolicina) VALUES (?, ?, ?)",
       [porudzbina_id, jelo_id, kolicina]
     );
     res.json({ poruka: "Stavka dodata" });

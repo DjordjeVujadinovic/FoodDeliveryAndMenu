@@ -1,5 +1,4 @@
 import { konekcija } from '../mysqlTabela/tabela';
-
 export const svePorudzbine = async () => {
   const [rows] = await konekcija.query('SELECT * FROM porudzbina');
   return rows;
